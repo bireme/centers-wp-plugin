@@ -4,11 +4,12 @@ Plugin Name: Cooperating Centers
 Plugin URI: https://github.com/bireme/centers-wp-plugin/
 Description: VHL Cooperating Centers Directory WordPress plugin
 Author: BIREME/OPAS/OMS
-Version: 2.0
+Version: 2.1
 Author URI: http://reddes.bvsalud.org/
 */
-
-define('CC_VERSION', '2.0' );
+//ini_set('display_errors', 1);
+//error_reporting(E_ALL);
+define('CC_VERSION', '2.1' );
 
 define('CC_SYMBOLIC_LINK', false );
 define('CC_PLUGIN_DIRNAME', 'cc' );

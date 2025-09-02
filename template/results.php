@@ -14,9 +14,10 @@ $site_language = strtolower(get_bloginfo('language'));
 $lang = substr($site_language,0,2);
 
 //compatibility with older version
-$search = sanitize_text_field($_GET['search']);
-$country = sanitize_text_field($_GET['country']);
-$user = sanitize_text_field($_GET['user']);
+$search = isset($_GET['search']) ? sanitize_text_field($_GET['search']) : '';
+$country = isset($_GET['country']) ? sanitize_text_field($_GET['country']) : '';
+//$descriptor = isset($_GET['descriptor']) ? sanitize_text_field($_GET['descriptor']) : '';
+$user = isset($_GET['user']) ? sanitize_text_field($_GET['user']) : '';
 
 if ($search != ''){
     $old_query = str_replace('=', ':',  urldecode($search));
@@ -31,12 +32,14 @@ if ($user != ''){
 
 $query = ( isset($_GET['s']) ? sanitize_text_field($_GET['s']) : sanitize_text_field($_GET['q']) );
 
-if ($old_query != ''){
-    $query .= $old_query;
+if(isset($old_query)){
+    if ($old_query != ''){
+        $query .= $old_query;
+    }
 }
 
 $query = stripslashes($query);
-$sanitize_user_filter = sanitize_text_field($_GET['filter']);
+$sanitize_user_filter = isset($_GET['filter']) ? sanitize_text_field($_GET['filter']) : '';
 $user_filter = stripslashes($sanitize_user_filter);
 $page = ( isset($_GET['page']) ? sanitize_text_field($_GET['page']) : 1 );
 $total = 0;
@@ -66,20 +69,37 @@ if ( $user_filter != '' ) {
             $applied_filter_list[$filter_parts[1]][] = str_replace('"', '', $filter_parts[2]);
         }
     }
+}else{
+   // $applied_filter_list = '';
 }
 
 $response = @file_get_contents($cc_search);
 if ($response){
     $response_json = json_decode($response);
     //var_dump($response_json);
-    $total = $response_json->diaServerResponse[0]->response->numFound;
-    $start = $response_json->diaServerResponse[0]->response->start;
-    $center_list = $response_json->diaServerResponse[0]->response->docs;
+$total = isset($response_json->diaServerResponse[0]->response->numFound)
+    ? $response_json->diaServerResponse[0]->response->numFound
+    : 0;
 
-    $type_list = (array) $response_json->diaServerResponse[0]->facet_counts->facet_fields->institution_type;
-    $thematic_list = (array) $response_json->diaServerResponse[0]->facet_counts->facet_fields->institution_thematic;
-    $country_list = (array) $response_json->diaServerResponse[0]->facet_counts->facet_fields->country;
+$start = isset($response_json->diaServerResponse[0]->response->start)
+    ? $response_json->diaServerResponse[0]->response->start
+    : 0;
 
+$center_list = isset($response_json->diaServerResponse[0]->response->docs)
+    ? $response_json->diaServerResponse[0]->response->docs
+    : [];
+
+$type_list = isset($response_json->diaServerResponse[0]->facet_counts->facet_fields->institution_type)
+    ? (array) $response_json->diaServerResponse[0]->facet_counts->facet_fields->institution_type
+    : [];
+
+$thematic_list = isset($response_json->diaServerResponse[0]->facet_counts->facet_fields->institution_thematic)
+    ? (array) $response_json->diaServerResponse[0]->facet_counts->facet_fields->institution_thematic
+    : [];
+
+$country_list = isset($response_json->diaServerResponse[0]->facet_counts->facet_fields->country)
+    ? (array) $response_json->diaServerResponse[0]->facet_counts->facet_fields->country
+    : [];
     usort($type_list, function($a, $b) use ($patterns, $type_translated) {
         $a[0] = strtolower($type_translated[$a[0]]);
         $a[0] = preg_replace(array_values($patterns), array_keys($patterns), $a[0]);
@@ -171,6 +191,7 @@ if ( function_exists( 'pll_the_languages' ) ) {
                     echo '  <td>' . $resource->cooperative_center_code . '</td>';
                     echo '</tr>';
 
+                    if(isset($resource->institution_type)){
                     if ($resource->institution_type){
                         echo '<tr>';
                         echo '  <td valign="top"><i class="fas fa-table"></i></td>';
@@ -182,9 +203,10 @@ if ( function_exists( 'pll_the_languages' ) ) {
                         echo '   </td>';
                         echo '</tr>';
                     }
+                    }
 
                     if ($resource->address){
-                        $full_address = $resource->address[0] . ' - ' . $resource->city . ' - ' . $resource->state[0] . ' - ' . get_lang_value($resource->country, $lang);
+                        $full_address = $resource->address[0] . ' - ' . $resource->city . ' - ' . (isset($resource->state[0]) ? $resource->state[0] : '') . ' - ' . get_lang_value($resource->country, $lang);
                         echo '<tr>';
                         echo '    <td valign="top"><i class="fas fa-map-marker-alt"></i></td>';
                         echo '    <td>';
@@ -203,7 +225,8 @@ if ( function_exists( 'pll_the_languages' ) ) {
                         echo '</td>';
                         echo '</tr>';
                     }
-                    if ($resource->link){
+                    if(isset$resource->link)){
+                        if ($resource->link){
                         echo '<tr>';
                         echo '	<td valign="top"><i class="fas fa-tv"></i></td>';
                         echo '  <td>';
@@ -213,6 +236,7 @@ if ( function_exists( 'pll_the_languages' ) ) {
                         }
                         echo '</td>';
                         echo '</tr>';
+                        }
                     }
                     echo '</table>';
                     echo '</div>';
@@ -228,7 +252,9 @@ if ( function_exists( 'pll_the_languages' ) ) {
 
         <div class="col-md-4 col-lg-3" id="filterRight">
             <div class="boxFilter">
-                <?php if ($applied_filter_list) :?>
+                <?php 
+                    if(isset($applied_filter_list)){
+                    if ($applied_filter_list) :?>
                     <form method="get" name="searchFilter" id="formFilters" action="?results">
                         <input type="hidden" name="lang" id="lang" value="<?php echo $lang; ?>">
                         <input type="hidden" name="q" id="query" value="<?php echo $query; ?>" >
@@ -266,7 +292,7 @@ if ( function_exists( 'pll_the_languages' ) ) {
                             <?php endif; ?>
                         <?php endforeach; ?>
                     </form>
-                <?php endif; ?>
+                <?php endif; }?>
 
                 <section>
                     <h5 class="box1Title"><?php _e('VHL Network','cc'); ?></h5>
