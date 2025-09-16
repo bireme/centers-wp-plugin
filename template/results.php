@@ -225,7 +225,7 @@ if ( function_exists( 'pll_the_languages' ) ) {
                         echo '</td>';
                         echo '</tr>';
                     }
-                    if(isset$resource->link)){
+                    if(isset($resource->link)){
                         if ($resource->link){
                         echo '<tr>';
                         echo '	<td valign="top"><i class="fas fa-tv"></i></td>';
