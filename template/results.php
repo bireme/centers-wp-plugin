@@ -276,8 +276,12 @@ if ( function_exists( 'pll_the_languages' ) ) {
                         <input type="hidden" name="filter" id="filter" value="" >
 
                         <?php foreach ( $applied_filter_list as $ap_filter => $ap_filter_values ) :?>
+                            <?php if ($ap_filter == 'status'){ ?>
+                                    <h5><?php _e('Institution Status','cc'); ?></h5><?php } ?>
                             <?php if ($ap_filter != 'country_code'): ?>
+                                <?php if ($ap_filter != 'status'){ ?>
                                 <h5><?php echo $filter_title_translated[$ap_filter]; ?></h5>
+                                <?php } ?>
                                 <ul>
                                 <?php foreach ( $ap_filter_values as $value ) :?>
                                     <input type="hidden" name="apply_filter" class="apply_filter"
@@ -285,6 +289,18 @@ if ( function_exists( 'pll_the_languages' ) ) {
                                     <li>
                                         <span class="filter-item">
                                             <?php
+                                            if ($ap_filter == 'status'){
+                                                if($value == 1){
+                                                    $statusnome = "Active";
+                                                    _e($statusnome,'cc');
+                                                }elseif($value == 2){
+                                                    $statusnome = "Inactive";
+                                                    _e($statusnome,'cc');
+                                                }else{
+                                                    $statusnome = "Closed";
+                                                    _e($statusnome,'cc');
+                                                }
+                                            }else{
                                                 if ($ap_filter == 'country'){
                                                     echo print_lang_value($value, $site_language);
                                                 }elseif ($ap_filter == 'institution_type'){
@@ -294,6 +310,7 @@ if ( function_exists( 'pll_the_languages' ) ) {
                                                 }else{
                                                     echo $value;
                                                 }
+                                            }
                                             ?>
                                         </span>
                                         <span class="filter-item-del">
