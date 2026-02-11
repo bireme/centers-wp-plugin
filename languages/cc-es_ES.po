@@ -5,7 +5,7 @@ msgstr ""
 "Project-Id-Version: LeisRef 0.1\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/centers\n"
 "POT-Creation-Date: 2023-09-25T14:36:43+00:00\n"
-"PO-Revision-Date: 2026-02-11 14:13-0300\n"
+"PO-Revision-Date: 2026-02-11 18:09-0300\n"
 "Last-Translator: Vinicius de Andrade <antoniov@paho.org>\n"
 "Language-Team: \n"
 "Language: es\n"
@@ -163,7 +163,7 @@ msgstr "Red BVS"
 
 #: template/home.php:360 template/results.php:295 template/translations.php:39
 msgid "Thematic Networks"
-msgstr "Redes Tematicas"
+msgstr "Redes Temáticas"
 
 #: template/results.php:131
 msgid "No results found"
