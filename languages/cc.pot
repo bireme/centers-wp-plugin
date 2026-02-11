@@ -264,3 +264,6 @@ msgstr ""
 
 msgid "Closed"
 msgstr ""
+
+msgid "Institution Status"
+msgstr ""
