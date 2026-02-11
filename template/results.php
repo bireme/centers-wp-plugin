@@ -13,7 +13,10 @@ $cc_initial_filter = $cc_config['initial_filter'];
 $site_language = strtolower(get_bloginfo('language'));
 $lang = substr($site_language,0,2);
 
+
+
 //compatibility with older version
+
 $search = isset($_GET['search']) ? sanitize_text_field($_GET['search']) : '';
 $country = isset($_GET['country']) ? sanitize_text_field($_GET['country']) : '';
 //$descriptor = isset($_GET['descriptor']) ? sanitize_text_field($_GET['descriptor']) : '';
@@ -46,6 +49,11 @@ $total = 0;
 $count = 10;
 $filter = '';
 
+if(!isset($cc_initial_filter)){
+$cc_initial_filter = '';
+}
+
+
 if ($user_filter != ''){
     if (substr($user_filter, 0, strlen($cc_initial_filter)) === $cc_initial_filter){
         $filter = $user_filter;
@@ -58,6 +66,7 @@ if ($user_filter != ''){
 $start = ($page * $count) - $count;
 
 $cc_search = $cc_service_url . 'api/institution/search/?q=' . urlencode($query) . '&fq=' . urlencode($filter) . '&start=' . $start . '&lang=' . $lang;
+//echo $cc_search;
 
 if ( $user_filter != '' ) {
     $user_filter_list = preg_split("/ AND /", $user_filter);
@@ -96,6 +105,12 @@ $type_list = isset($response_json->diaServerResponse[0]->facet_counts->facet_fie
 $thematic_list = isset($response_json->diaServerResponse[0]->facet_counts->facet_fields->institution_thematic)
     ? (array) $response_json->diaServerResponse[0]->facet_counts->facet_fields->institution_thematic
     : [];
+
+$status_list = isset($response_json->diaServerResponse[0]->facet_counts->facet_fields->status)
+    ? (array) $response_json->diaServerResponse[0]->facet_counts->facet_fields->status
+    : [];
+
+
 
 $country_list = isset($response_json->diaServerResponse[0]->facet_counts->facet_fields->country)
     ? (array) $response_json->diaServerResponse[0]->facet_counts->facet_fields->country
@@ -293,7 +308,39 @@ if ( function_exists( 'pll_the_languages' ) ) {
                         <?php endforeach; ?>
                     </form>
                 <?php endif; }?>
-
+                
+                <?php if ($status_list): ?>
+                    <section>
+                        <h5 class="box1Title"><?php _e('Institution Status','cc'); ?></h5>
+                        <ul class="filter-list">
+                            <?php foreach ($status_list as $status) { ?>
+                                <?php
+                                    $filter_link = '?';
+                                    if ($query != ''){
+                                        $filter_link .= 'q=' . $query . '&';
+                                    }
+                                    $filter_link .= 'filter=status:"' . $status[0] . '"';
+                                    if ($user_filter != ''){
+                                        $filter_link .= ' AND ' . $user_filter ;
+                                    }
+                                ?>
+                                <?php
+                                    if($status[0] == 1){
+                                        $statusnome = "Active";
+                                    }elseif($status[0] == 2){
+                                        $statusnome = "Inactive";
+                                    }else{
+                                        $statusnome = "Closed";
+                                    }
+                                    ?>
+                                <li class="cat-item">
+                                    <a href='<?php echo $filter_link; ?>'><?php _e($statusnome,'cc'); ?></a>
+                                    <span class="cat-item-count">(<?php echo $status[1] ?>)</span>
+                                </li>
+                            <?php } ?>
+                        </ul>
+                    </section>
+                <?php endif; ?>
                 <section>
                     <h5 class="box1Title"><?php _e('VHL Network','cc'); ?></h5>
                     <ul class="filter-list">

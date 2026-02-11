@@ -255,3 +255,12 @@ msgstr ""
 #: template/translations.php:36
 msgid "SMS-SP"
 msgstr ""
+
+msgid "Active"
+msgstr ""
+
+msgid "Inactive"
+msgstr ""
+
+msgid "Closed"
+msgstr ""

@@ -5,14 +5,14 @@ msgstr ""
 "Project-Id-Version: LeisRef 0.1\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/centers\n"
 "POT-Creation-Date: 2023-09-25T14:36:43+00:00\n"
-"PO-Revision-Date: 2023-09-25 12:12-0300\n"
+"PO-Revision-Date: 2026-02-11 14:03-0300\n"
 "Last-Translator: Vinicius de Andrade <antoniov@paho.org>\n"
 "Language-Team: \n"
 "Language: es\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 3.0.1\n"
+"X-Generator: Poedit 3.6\n"
 
 #. Plugin Name of the plugin
 #: centers.php:91 centers.php:226
@@ -224,6 +224,15 @@ msgstr "Departamento de Salud del Estado de São Paulo"
 #: template/translations.php:36
 msgid "SMS-SP"
 msgstr "Departamento Municipal de Salud de São Paulo"
+
+msgid "Active"
+msgstr "Activa"
+
+msgid "Inactive"
+msgstr "Inactiva"
+
+msgid "Closed"
+msgstr "Cerrada"
 
 #~ msgid "Page layout"
 #~ msgstr "Diseño de página"
